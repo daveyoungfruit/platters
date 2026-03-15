@@ -541,7 +541,9 @@ function submitOrder() {
     });
 }
 
-// No min date restriction - short notice shows a call message instead
+// Allow any date from today onwards - short notice shows a warning but doesn't block
+var today = new Date();
+document.getElementById('pickupDate').min = today.toISOString().split('T')[0];
 
 // Show call message if they pick a date under 48 hours
 document.getElementById('pickupDate').addEventListener('change', function() {
@@ -561,8 +563,8 @@ document.getElementById('pickupDate').addEventListener('change', function() {
   }
 });
 
-// Clear errors on input
-var fields = ['firstName','lastName','phone','email','pickupDate','pickupTime'];
+// Clear errors on input - exclude pickupDate since it has its own handler
+var fields = ['firstName','lastName','phone','email','pickupTime'];
 for (var f = 0; f < fields.length; f++) {
   (function(id) {
     var el = document.getElementById(id);
