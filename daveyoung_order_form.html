@@ -477,9 +477,7 @@ function submitOrder() {
   var pickupDate = document.getElementById('pickupDate').value;
   var dateOk = false;
   if (pickupDate) {
-    var chosen = new Date(pickupDate + 'T00:00:00');
-    var today = new Date(); today.setHours(0,0,0,0);
-    dateOk = (chosen - today) / 86400000 >= 2;
+    dateOk = true; // any date is allowed, short notice just shows a warning
   }
   showError('pickupDate','pickupDateError', !dateOk);
   if (!dateOk) valid = false;
@@ -543,10 +541,25 @@ function submitOrder() {
     });
 }
 
-// Set min date
-var minD = new Date();
-minD.setDate(minD.getDate() + 2);
-document.getElementById('pickupDate').min = minD.toISOString().split('T')[0];
+// No min date restriction - short notice shows a call message instead
+
+// Show call message if they pick a date under 48 hours
+document.getElementById('pickupDate').addEventListener('change', function() {
+  if (this.value) {
+    var chosen = new Date(this.value + 'T00:00:00');
+    var today = new Date(); today.setHours(0,0,0,0);
+    var diff = (chosen - today) / 86400000;
+    var warn = document.getElementById('pickupDateError');
+    if (diff < 2) {
+      warn.textContent = 'This date is less than 48 hours away. Please call or text us at (416) 489-1118 to check if we can accommodate your order on short notice.';
+      warn.style.color = '#b06000';
+      warn.classList.add('show');
+      this.classList.remove('invalid');
+    } else {
+      warn.classList.remove('show');
+    }
+  }
+});
 
 // Clear errors on input
 var fields = ['firstName','lastName','phone','email','pickupDate','pickupTime'];
