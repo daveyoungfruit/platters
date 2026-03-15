@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order — Dave Young Fruit Market</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --red:#C8232C; --yellow:#F5C800; --yellow-light:#FDF3B0; --dark:#1a1a1a; --white:#fff; --radius:16px; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'DM Sans',sans-serif; background:var(--yellow); min-height:100vh; color:var(--dark); }
+  header { background:var(--red); color:var(--white); text-align:center; padding:36px 24px 32px; position:relative; overflow:hidden; }
+  header::before { content:''; position:absolute; bottom:-30px; left:50%; transform:translateX(-50%); width:120%; height:60px; background:var(--yellow); border-radius:50% 50% 0 0/100% 100% 0 0; }
+  .logo-text { font-family:'Playfair Display',serif; font-size:2rem; font-weight:900; }
+  .logo-sub { font-size:0.82rem; letter-spacing:3px; text-transform:uppercase; opacity:0.85; margin-top:3px; }
+  .tagline { margin-top:8px; font-size:0.92rem; opacity:0.88; }
+  .form-wrapper { max-width:640px; margin:0 auto 60px; padding:0 16px; }
+  .notice-banner { background:var(--yellow-light); border:2px solid var(--red); border-radius:12px; padding:10px 18px; font-size:0.85rem; font-weight:600; color:var(--red); text-align:center; margin:44px auto 0; max-width:560px; }
+  .section-label { font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:700; color:var(--red); margin:32px 0 12px; padding-bottom:6px; border-bottom:3px solid var(--red); }
+  .card { background:var(--white); border-radius:var(--radius); padding:22px; margin-bottom:14px; box-shadow:0 2px 12px rgba(0,0,0,0.07); }
+  label { display:block; font-weight:600; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.8px; color:#666; margin-bottom:7px; }
+  label .req { color:var(--red); }
+  input[type="text"], input[type="tel"], input[type="email"], input[type="date"], select, textarea { width:100%; padding:11px 13px; border:2px solid #e5e5e5; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:0.97rem; color:var(--dark); background:#fafafa; transition:border-color 0.2s; appearance:none; }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--red); background:#fff; }
+  textarea { resize:vertical; min-height:76px; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .field-group { margin-bottom:16px; }
+  .field-group:last-child { margin-bottom:0; }
+  .helper { font-size:0.78rem; color:#999; margin-top:5px; }
+  /* Validation */
+  .field-error { font-size:0.78rem; color:var(--red); margin-top:5px; display:none; }
+  .field-error.show { display:block; }
+  input.invalid, select.invalid { border-color:var(--red) !important; background:#fff5f5 !important; }
+  .error-banner { background:#fff5f5; border:2px solid var(--red); border-radius:12px; padding:12px 16px; color:var(--red); font-weight:600; font-size:0.88rem; margin-bottom:16px; display:none; }
+  .error-banner.show { display:block; }
+  /* Toggles */
+  .toggle-row { display:flex; gap:10px; }
+  .toggle-btn { flex:1; padding:11px; border:2px solid #e8e8e8; border-radius:10px; text-align:center; cursor:pointer; font-weight:600; font-size:0.9rem; transition:all 0.2s; background:#fafafa; user-select:none; }
+  .toggle-btn.active { border-color:var(--red); background:var(--red); color:#fff; }
+  /* Builder */
+  .builder-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+  .tab-btn { padding:8px 14px; border:2px solid #e0e0e0; border-radius:20px; font-size:0.85rem; font-weight:600; cursor:pointer; background:#fafafa; transition:all 0.2s; white-space:nowrap; user-select:none; }
+  .tab-btn.active { border-color:var(--red); background:var(--red); color:#fff; }
+  .builder-panel { display:none; }
+  .builder-panel.visible { display:block; }
+  .chip-group { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .chip { padding:8px 14px; border:2px solid #e0e0e0; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer; background:#fafafa; transition:all 0.18s; position:relative; user-select:none; }
+  .chip:hover { border-color:var(--red); }
+  .chip.active { border-color:var(--red); background:#fff5f5; color:var(--red); }
+  .chip .chip-sub { font-weight:400; font-size:0.75rem; color:#888; display:block; margin-top:1px; }
+  .chip.active .chip-sub { color:#c55; }
+  .chip .pop-badge { position:absolute; top:-8px; right:-6px; background:var(--red); color:#fff; font-size:0.62rem; font-weight:700; padding:2px 6px; border-radius:20px; }
+  .builder-row-label { font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#888; margin-bottom:8px; }
+  .add-btn { width:100%; padding:13px; background:var(--red); color:#fff; border:none; border-radius:11px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:0.95rem; cursor:pointer; margin-top:14px; transition:opacity 0.2s; }
+  .add-btn:hover { opacity:0.88; }
+  /* Cart */
+  .cart-wrap { margin-top:18px; }
+  .cart-empty { font-size:0.88rem; color:#aaa; font-style:italic; text-align:center; padding:10px 0; }
+  .cart-item-wrap { margin-bottom:8px; }
+  .cart-item { display:flex; align-items:center; justify-content:space-between; background:#fafafa; border:2px solid #eee; border-radius:11px; border-bottom-left-radius:0; border-bottom-right-radius:0; border-bottom:none; padding:12px 14px; gap:10px; }
+  .cart-item-info { flex:1; }
+  .cart-item-name { font-weight:700; font-size:0.95rem; }
+  .cart-item-sub { font-size:0.78rem; color:#888; margin-top:2px; }
+  .cart-item-price { font-weight:700; color:var(--red); font-size:0.95rem; white-space:nowrap; }
+  .cart-qty { display:flex; align-items:center; gap:6px; }
+  .qty-btn { width:28px; height:28px; border:2px solid #ddd; border-radius:8px; background:#fff; font-size:1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#555; transition:all 0.15s; }
+  .qty-btn:hover { border-color:var(--red); color:var(--red); }
+  .qty-num { font-weight:700; font-size:0.95rem; min-width:18px; text-align:center; }
+  .remove-btn { background:none; border:none; cursor:pointer; color:#ccc; font-size:1.1rem; padding:4px; transition:color 0.15s; }
+  .remove-btn:hover { color:var(--red); }
+  .item-notes-row { background:#fffbea; border:2px solid #eee; border-top:none; border-bottom-left-radius:11px; border-bottom-right-radius:11px; padding:8px 12px 10px; }
+  .item-notes-row input { width:100%; border:1.5px solid #e0e0e0; border-radius:8px; padding:7px 11px; font-family:'DM Sans',sans-serif; font-size:0.83rem; background:#fff; color:var(--dark); }
+  .item-notes-row input:focus { outline:none; border-color:var(--red); }
+  .item-notes-hint { font-size:0.72rem; color:#aaa; margin-top:5px; }
+  .item-notes-hint span { color:var(--red); font-weight:600; }
+  /* Summary */
+  .order-summary { background:var(--red); color:#fff; border-radius:var(--radius); padding:20px 22px; margin-top:22px; }
+  .summary-title { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; margin-bottom:12px; }
+  .summary-line { display:flex; justify-content:space-between; font-size:0.88rem; padding:3px 0; opacity:0.9; }
+  .summary-total { border-top:1px solid rgba(255,255,255,0.3); margin-top:10px; padding-top:10px; font-weight:700; font-size:1.05rem; opacity:1 !important; }
+  .summary-empty { text-align:center; opacity:0.6; font-size:0.88rem; font-style:italic; }
+  .submit-btn { width:100%; background:var(--red); color:#fff; border:none; border-radius:13px; padding:17px; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; cursor:pointer; margin-top:18px; transition:opacity 0.2s; }
+  .submit-btn:hover { opacity:0.88; }
+  .submit-btn:disabled { opacity:0.45; cursor:not-allowed; }
+  .fine-print { text-align:center; font-size:0.77rem; color:#888; margin-top:12px; }
+  @media(max-width:480px) { .two-col { grid-template-columns:1fr; } .chip { font-size:0.8rem; padding:7px 11px; } }
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Dave Young Fruit Market" style="height:70px; display:block; margin:0 auto 6px;">
+  <div class="logo-sub">494 Eglinton Ave West &middot; Toronto</div>
+</header>
+<div class="form-wrapper">
+  <div class="notice-banner">&#9200; All orders require 48 hours notice &mdash; we&rsquo;ll confirm by phone or text</div>
+  <div style="text-align:center; margin-top:16px;">
+    <a href="index.html" style="font-size:0.85rem; font-weight:600; color:var(--red); text-decoration:none;">&#8592; Back to Menu</a>
+  </div>
+
+  <form id="orderForm" novalidate>
+
+    <div class="section-label">Your Info</div>
+    <div class="card">
+      <div class="two-col">
+        <div class="field-group">
+          <label>First Name <span class="req">*</span></label>
+          <input type="text" id="firstName" name="firstName" placeholder="Jane">
+          <div class="field-error" id="firstNameError">Please enter your first name</div>
+        </div>
+        <div class="field-group">
+          <label>Last Name <span class="req">*</span></label>
+          <input type="text" id="lastName" name="lastName" placeholder="Smith">
+          <div class="field-error" id="lastNameError">Please enter your last name</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Phone Number <span class="req">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="(416) 555-0123">
+        <div class="field-error" id="phoneError">Please enter your phone number</div>
+        <div class="helper">We&rsquo;ll call or text to confirm your order</div>
+      </div>
+      <div class="field-group">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" id="email" name="email" placeholder="jane@email.com">
+        <div class="field-error" id="emailError">Please enter a valid email address</div>
+        <div class="helper">We&rsquo;ll send your Moneris payment link here</div>
+      </div>
+    </div>
+
+    <div class="section-label">Pickup Date</div>
+    <div class="card">
+      <div class="field-group">
+        <label>Requested Pickup Date <span class="req">*</span></label>
+        <input type="date" id="pickupDate" name="pickupDate">
+        <div class="field-error" id="pickupDateError">Please select a date at least 2 days from today</div>
+      </div>
+      <div class="field-group">
+        <label>Preferred Pickup Time <span class="req">*</span></label>
+        <select id="pickupTime" name="pickupTime">
+          <option value="">— Select a window —</option>
+          <option>Morning (9am - 11am)</option>
+          <option>Late Morning (11am - 1pm)</option>
+          <option>Afternoon (1pm - 3pm)</option>
+          <option>Late Afternoon (3pm - 5pm)</option>
+        </select>
+        <div class="field-error" id="pickupTimeError">Please select a pickup time</div>
+        <div class="helper">We&rsquo;ll confirm the exact time when we call</div>
+      </div>
+      <div class="field-group">
+        <label>Pickup or Delivery? <span class="req">*</span></label>
+        <div class="toggle-row">
+          <div class="toggle-btn active" id="togglePickup" onclick="setFulfillment('pickup')">&#127978; Pickup In-Store</div>
+          <div class="toggle-btn" id="toggleDelivery" onclick="setFulfillment('delivery')">&#128666; Delivery</div>
+        </div>
+        <input type="hidden" id="fulfillmentVal" name="fulfillment" value="pickup">
+        <div id="deliveryFields" style="display:none; margin-top:12px;">
+          <div class="field-group" style="margin-bottom:10px;">
+            <label>Delivery Address</label>
+            <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="123 Main St, Toronto, ON">
+          </div>
+          <div class="helper" style="color:#b06000; background:#fff8ee; border:1.5px solid #f5d580; border-radius:8px; padding:8px 12px;">
+            &#128666; <strong>$10 delivery fee</strong> will be added &mdash; we&rsquo;ll confirm your address is within our delivery area when we call
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Build Your Order</div>
+    <div class="card">
+      <div class="builder-tabs">
+        <div class="tab-btn active" onclick="switchTab(this,'fruitPanel')">&#127827; Fruit Platter</div>
+        <div class="tab-btn" onclick="switchTab(this,'vegPanel')">&#129382; Veg Platter</div>
+        <div class="tab-btn" onclick="switchTab(this,'fbasketPanel')">&#129746; Fruit Basket</div>
+        <div class="tab-btn" onclick="switchTab(this,'cheesePanel')">&#129472; Cheese Board</div>
+        <div class="tab-btn" onclick="switchTab(this,'giftPanel')">&#127873; Gift Basket</div>
+      </div>
+
+      <div class="builder-panel visible" id="fruitPanel">
+        <div class="builder-row-label">Tier</div>
+        <div class="chip-group" id="fruitTierChips">
+          <div class="chip active" data-val="Standard" onclick="pickChip(this,'fruitTierChips')">Standard<span class="chip-sub">Watermelon, cantaloupe, honeydew, strawberries</span></div>
+          <div class="chip" data-val="Deluxe" onclick="pickChip(this,'fruitTierChips')">Deluxe <span class="pop-badge">Popular</span><span class="chip-sub">+ pineapple, mixed berries</span></div>
+          <div class="chip" data-val="Premium" onclick="pickChip(this,'fruitTierChips')">Premium<span class="chip-sub">+ mango, pomegranate, dragonfruit, fig</span></div>
+        </div>
+        <div class="builder-row-label">Size</div>
+        <div class="chip-group" id="fruitSizeChips">
+          <div class="chip active" data-val="Small" onclick="pickChip(this,'fruitSizeChips')">Small<span class="chip-sub">4-6 people</span></div>
+          <div class="chip" data-val="Medium" onclick="pickChip(this,'fruitSizeChips')">Medium<span class="chip-sub">6-12 people</span></div>
+          <div class="chip" data-val="Large" onclick="pickChip(this,'fruitSizeChips')">Large<span class="chip-sub">12-20 people</span></div>
+        </div>
+        <button type="button" class="add-btn" onclick="addItem('fruit')">+ Add Fruit Platter &mdash; <span id="fruitPreviewPrice">$34.99</span></button>
+      </div>
+
+      <div class="builder-panel" id="vegPanel">
+        <div class="builder-row-label">Size</div>
+        <div class="chip-group" id="vegSizeChips">
+          <div class="chip active" data-val="Medium" onclick="pickChip(this,'vegSizeChips')">Medium<span class="chip-sub">6-12 people &middot; $65.99</span></div>
+          <div class="chip" data-val="Large" onclick="pickChip(this,'vegSizeChips')">Large<span class="chip-sub">12-20 people &middot; $99.99</span></div>
+        </div>
+        <button type="button" class="add-btn" onclick="addItem('veg')">+ Add Veg Platter</button>
+      </div>
+
+      <div class="builder-panel" id="fbasketPanel">
+        <div class="builder-row-label">Tier</div>
+        <div class="chip-group" id="fbasketTierChips">
+          <div class="chip active" data-val="Standard" onclick="pickChip(this,'fbasketTierChips')">Standard<span class="chip-sub">$64.99</span></div>
+          <div class="chip" data-val="Deluxe" onclick="pickChip(this,'fbasketTierChips')">Deluxe<span class="chip-sub">$99.99</span></div>
+          <div class="chip" data-val="Premium" onclick="pickChip(this,'fbasketTierChips')">Premium<span class="chip-sub">$139.99</span></div>
+        </div>
+        <button type="button" class="add-btn" onclick="addItem('fbasket')">+ Add Fruit Basket</button>
+      </div>
+
+      <div class="builder-panel" id="cheesePanel">
+        <p style="font-size:0.9rem; color:#555; margin-bottom:14px;">Finest cheeses paired with crackers, fruits and spreads. <strong style="color:var(--red);">$99.99</strong></p>
+        <button type="button" class="add-btn" onclick="addItem('cheese')">+ Add Cheese Board &mdash; $99.99</button>
+      </div>
+
+      <div class="builder-panel" id="giftPanel">
+        <div class="builder-row-label">Type &mdash; <span style="font-weight:400;text-transform:none;letter-spacing:0;">all $99.99</span></div>
+        <div class="chip-group" id="giftTypeChips">
+          <div class="chip active" data-val="Custom Deluxe" onclick="pickChip(this,'giftTypeChips')">Custom Deluxe</div>
+          <div class="chip" data-val="Pasta Basket" onclick="pickChip(this,'giftTypeChips')">Pasta Basket</div>
+          <div class="chip" data-val="Jam / Honey Basket" onclick="pickChip(this,'giftTypeChips')">Jam / Honey</div>
+          <div class="chip" data-val="Cheese and Crackers Basket" onclick="pickChip(this,'giftTypeChips')">Cheese and Crackers</div>
+          <div class="chip" data-val="Tea or Coffee Basket" onclick="pickChip(this,'giftTypeChips')">Tea or Coffee</div>
+          <div class="chip" data-val="Gourmet Dried Fruit and Nut" onclick="pickChip(this,'giftTypeChips')">Dried Fruit and Nut</div>
+        </div>
+        <button type="button" class="add-btn" onclick="addItem('gift')">+ Add Gift Basket &mdash; $99.99</button>
+      </div>
+
+      <div class="cart-wrap">
+        <div style="font-weight:700;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.8px;color:#888;margin-bottom:10px;margin-top:8px;padding-top:18px;border-top:2px solid #f0f0f0;">Your Items</div>
+        <div id="cartItems"><div class="cart-empty">No items added yet &mdash; pick a category above</div></div>
+      </div>
+    </div>
+
+    <div class="section-label">Anything Else?</div>
+    <div class="card">
+      <div class="field-group">
+        <label>Special Requests / Notes</label>
+        <textarea name="notes" id="notes" placeholder="Allergies, event type, custom requests..."></textarea>
+      </div>
+      <div class="field-group">
+        <label>How did you hear about us?</label>
+        <select name="source" id="source">
+          <option value="">— Select one —</option>
+          <option>Instagram</option>
+          <option>Walked by / In-store</option>
+          <option>Pamphlet / Flyer</option>
+          <option>Friend / Word of mouth</option>
+          <option>Google</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="order-summary">
+      <div class="summary-title">Order Summary</div>
+      <div id="summaryLines"><div class="summary-empty">No items added yet</div></div>
+    </div>
+
+    <div class="error-banner" id="errorBanner">&#9888; Please fix the errors above before submitting.</div>
+    <button type="button" class="submit-btn" id="submitBtn" onclick="submitOrder()">Submit Order Request &rarr;</button>
+    <div class="fine-print">We&rsquo;ll call or text you to confirm and take payment.<br>All orders require 48 hours notice &middot; (416) 489-1118</div>
+
+  </form>
+</div>
+
+<script>
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz6z9UlTS937RsXPqvAGqncjBq8V7NQcEKV-NppcUx53-IPDteaOMfjAfF4mzEbahVx/exec';
+
+var fruitP = {
+  Standard: { Small:34.99, Medium:55.99, Large:99.99 },
+  Deluxe:   { Small:41.99, Medium:77.99, Large:137.99 },
+  Premium:  { Small:69.99, Medium:129.99, Large:199.99 }
+};
+var vegP  = { Medium:65.99, Large:99.99 };
+var baskP = { Standard:64.99, Deluxe:99.99, Premium:139.99 };
+
+var cart = [];
+var nextId = 1;
+
+function switchTab(btn, panelId) {
+  var tabs = document.querySelectorAll('.tab-btn');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+  var panels = document.querySelectorAll('.builder-panel');
+  for (var i = 0; i < panels.length; i++) panels[i].classList.remove('visible');
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('visible');
+}
+
+function pickChip(el, groupId) {
+  var chips = document.getElementById(groupId).querySelectorAll('.chip');
+  for (var i = 0; i < chips.length; i++) chips[i].classList.remove('active');
+  el.classList.add('active');
+  updateFruitPreview();
+}
+
+function getActive(groupId) {
+  var el = document.querySelector('#' + groupId + ' .chip.active');
+  return el ? el.getAttribute('data-val') : '';
+}
+
+function updateFruitPreview() {
+  var tier = getActive('fruitTierChips') || 'Standard';
+  var size = getActive('fruitSizeChips') || 'Small';
+  var price = fruitP[tier] ? (fruitP[tier][size] || 0) : 0;
+  document.getElementById('fruitPreviewPrice').textContent = '$' + price.toFixed(2);
+}
+
+function addItem(type) {
+  var label, sub, price;
+  if (type === 'fruit') {
+    var tier = getActive('fruitTierChips') || 'Standard';
+    var size = getActive('fruitSizeChips') || 'Small';
+    price = fruitP[tier][size];
+    label = 'Fruit Platter - ' + tier;
+    sub = size + (size==='Small' ? ' (4-6 ppl)' : size==='Medium' ? ' (6-12 ppl)' : ' (12-20 ppl)');
+  } else if (type === 'veg') {
+    var size = getActive('vegSizeChips') || 'Medium';
+    price = vegP[size];
+    label = 'Veg Platter';
+    sub = size + (size==='Medium' ? ' (6-12 ppl)' : ' (12-20 ppl)');
+  } else if (type === 'fbasket') {
+    var tier = getActive('fbasketTierChips') || 'Standard';
+    price = baskP[tier];
+    label = 'Fruit Basket - ' + tier;
+    sub = '';
+  } else if (type === 'cheese') {
+    price = 99.99;
+    label = 'Cheese Board';
+    sub = 'Cheese, crackers, fruits and spreads';
+  } else if (type === 'gift') {
+    var t = getActive('giftTypeChips') || 'Custom Deluxe';
+    price = 99.99;
+    label = 'Gift Basket - ' + t;
+    sub = '';
+  }
+  var existing = null;
+  for (var i = 0; i < cart.length; i++) {
+    if (cart[i].label === label && cart[i].sub === sub) { existing = cart[i]; break; }
+  }
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ id: nextId++, label: label, sub: sub, price: price, qty: 1, notes: '' });
+  }
+  renderCart();
+}
+
+function changeQty(id, delta) {
+  for (var i = 0; i < cart.length; i++) {
+    if (cart[i].id === id) {
+      cart[i].qty += delta;
+      if (cart[i].qty <= 0) cart.splice(i, 1);
+      break;
+    }
+  }
+  renderCart();
+}
+
+function removeItem(id) {
+  cart = cart.filter(function(i) { return i.id !== id; });
+  renderCart();
+}
+
+function updateNotes(id, val) {
+  for (var i = 0; i < cart.length; i++) {
+    if (cart[i].id === id) { cart[i].notes = val; break; }
+  }
+  renderSummary();
+}
+
+function renderCart() {
+  var el = document.getElementById('cartItems');
+  if (!cart.length) {
+    el.innerHTML = '<div class="cart-empty">No items added yet - pick a category above</div>';
+    renderSummary();
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < cart.length; i++) {
+    var item = cart[i];
+    html += '<div class="cart-item-wrap">';
+    html += '<div class="cart-item">';
+    html += '<div class="cart-item-info"><div class="cart-item-name">' + item.label + '</div>';
+    if (item.sub) html += '<div class="cart-item-sub">' + item.sub + '</div>';
+    html += '</div>';
+    html += '<div class="cart-qty">';
+    html += '<button type="button" class="qty-btn" onclick="changeQty(' + item.id + ',-1)">-</button>';
+    html += '<span class="qty-num">' + item.qty + '</span>';
+    html += '<button type="button" class="qty-btn" onclick="changeQty(' + item.id + ',1)">+</button>';
+    html += '</div>';
+    html += '<div class="cart-item-price">$' + (item.price * item.qty).toFixed(2) + '</div>';
+    html += '<button type="button" class="remove-btn" onclick="removeItem(' + item.id + ')">x</button>';
+    html += '</div>';
+    html += '<div class="item-notes-row">';
+    html += '<input type="text" placeholder="Preferences or modifications? e.g. no cantaloupe, add grapes..." value="' + (item.notes || '') + '" oninput="updateNotes(' + item.id + ', this.value)">';
+    html += '<div class="item-notes-hint">Optional - <span>price adjustments for modifications confirmed when we call you</span></div>';
+    html += '</div></div>';
+  }
+  el.innerHTML = html;
+  renderSummary();
+}
+
+function renderSummary() {
+  var sumEl = document.getElementById('summaryLines');
+  if (!cart.length) {
+    sumEl.innerHTML = '<div class="summary-empty">No items added yet</div>';
+    return;
+  }
+  var isDelivery = document.getElementById('fulfillmentVal').value === 'delivery';
+  var subtotal = 0;
+  for (var i = 0; i < cart.length; i++) subtotal += cart[i].price * cart[i].qty;
+  var total = subtotal + (isDelivery ? 10 : 0);
+  var hasNotes = cart.some(function(i) { return i.notes && i.notes.trim(); });
+  var html = '';
+  for (var i = 0; i < cart.length; i++) {
+    var item = cart[i];
+    var noteStr = item.notes ? ' <span style="opacity:0.7;font-size:0.8em;">- ' + item.notes + '</span>' : '';
+    html += '<div class="summary-line"><span>' + item.label + (item.qty > 1 ? ' x' + item.qty : '') + noteStr + '</span><span>$' + (item.price * item.qty).toFixed(2) + '</span></div>';
+  }
+  if (isDelivery) html += '<div class="summary-line"><span>Delivery fee</span><span>$10.00</span></div>';
+  html += '<div class="summary-line summary-total"><span>Estimated Total' + (hasNotes ? '*' : '') + '</span><span>$' + total.toFixed(2) + '</span></div>';
+  if (hasNotes) html += '<div style="font-size:0.75rem;opacity:0.75;margin-top:6px;">*Final price may vary if modifications are requested</div>';
+  sumEl.innerHTML = html;
+}
+
+function setFulfillment(val) {
+  document.getElementById('fulfillmentVal').value = val;
+  if (val === 'delivery') {
+    document.getElementById('toggleDelivery').classList.add('active');
+    document.getElementById('togglePickup').classList.remove('active');
+    document.getElementById('deliveryFields').style.display = 'block';
+    document.getElementById('pickupTime').closest('.field-group').style.display = 'none';
+  } else {
+    document.getElementById('togglePickup').classList.add('active');
+    document.getElementById('toggleDelivery').classList.remove('active');
+    document.getElementById('deliveryFields').style.display = 'none';
+    document.getElementById('pickupTime').closest('.field-group').style.display = 'block';
+  }
+  renderSummary();
+}
+
+function showError(fieldId, errorId, show) {
+  var field = document.getElementById(fieldId);
+  var err = document.getElementById(errorId);
+  if (show) {
+    if (field) field.classList.add('invalid');
+    if (err) err.classList.add('show');
+  } else {
+    if (field) field.classList.remove('invalid');
+    if (err) err.classList.remove('show');
+  }
+}
+
+function submitOrder() {
+  var valid = true;
+
+  var firstName = document.getElementById('firstName').value.trim();
+  showError('firstName','firstNameError', !firstName);
+  if (!firstName) valid = false;
+
+  var lastName = document.getElementById('lastName').value.trim();
+  showError('lastName','lastNameError', !lastName);
+  if (!lastName) valid = false;
+
+  var phone = document.getElementById('phone').value.trim();
+  showError('phone','phoneError', !phone);
+  if (!phone) valid = false;
+
+  var email = document.getElementById('email').value.trim();
+  var emailOk = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  showError('email','emailError', !emailOk);
+  if (!emailOk) valid = false;
+
+  var pickupDate = document.getElementById('pickupDate').value;
+  var dateOk = false;
+  if (pickupDate) {
+    var chosen = new Date(pickupDate + 'T00:00:00');
+    var today = new Date(); today.setHours(0,0,0,0);
+    dateOk = (chosen - today) / 86400000 >= 2;
+  }
+  showError('pickupDate','pickupDateError', !dateOk);
+  if (!dateOk) valid = false;
+
+  var fulfillment = document.getElementById('fulfillmentVal').value;
+  var pickupTime = document.getElementById('pickupTime').value;
+  if (fulfillment === 'pickup' && !pickupTime) {
+    showError('pickupTime','pickupTimeError', true);
+    valid = false;
+  } else {
+    showError('pickupTime','pickupTimeError', false);
+  }
+
+  if (!cart.length) valid = false;
+
+  var banner = document.getElementById('errorBanner');
+  if (!valid) {
+    banner.classList.add('show');
+    var firstInvalid = document.querySelector('.invalid');
+    if (firstInvalid) firstInvalid.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+  banner.classList.remove('show');
+
+  var isDelivery = fulfillment === 'delivery';
+  var subtotal = 0;
+  for (var i = 0; i < cart.length; i++) subtotal += cart[i].price * cart[i].qty;
+  var total = subtotal + (isDelivery ? 10 : 0);
+
+  var itemsList = cart.map(function(item) {
+    return item.label + (item.sub ? ' - ' + item.sub : '') + (item.qty > 1 ? ' x' + item.qty : '') + (item.notes ? ' [' + item.notes + ']' : '') + ' $' + (item.price * item.qty).toFixed(2);
+  }).join('; ');
+
+  var orderData = {
+    firstName: firstName,
+    lastName: lastName,
+    phone: phone,
+    email: email,
+    pickupDate: pickupDate,
+    pickupTime: pickupTime,
+    fulfillment: fulfillment,
+    deliveryAddress: document.getElementById('deliveryAddress') ? document.getElementById('deliveryAddress').value : '',
+    items: itemsList,
+    total: '$' + total.toFixed(2),
+    notes: document.getElementById('notes').value,
+    source: document.getElementById('source').value
+  };
+
+  var btn = document.getElementById('submitBtn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  // Send as URL params to avoid CORS issues with Google Apps Script
+  var params = new URLSearchParams();
+  Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
+
+  fetch(SHEETS_URL, { method:'POST', body: params, mode:'no-cors' })
+    .catch(function() {})
+    .finally(function() {
+      window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
+    });
+}
+
+// Set min date
+var minD = new Date();
+minD.setDate(minD.getDate() + 2);
+document.getElementById('pickupDate').min = minD.toISOString().split('T')[0];
+
+// Clear errors on input
+var fields = ['firstName','lastName','phone','email','pickupDate','pickupTime'];
+for (var f = 0; f < fields.length; f++) {
+  (function(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', function() {
+        this.classList.remove('invalid');
+        var err = document.getElementById(id + 'Error');
+        if (err) err.classList.remove('show');
+      });
+    }
+  })(fields[f]);
+}
+
+updateFruitPreview();
+</script>
+</body>
+</html>

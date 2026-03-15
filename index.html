@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platters & Baskets — Dave Young Fruit Market</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C8232C;
+    --yellow: #F5C800;
+    --yellow-light: #FDF3B0;
+    --dark: #1a1a1a;
+    --white: #fff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--yellow);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--red);
+    color: var(--white);
+    padding: 56px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 50%;
+    transform: translateX(-50%);
+    width: 130%; height: 80px;
+    background: var(--yellow);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 7vw, 4.2rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--yellow);
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    opacity: 0.88;
+    max-width: 420px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--red);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 16px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+  .hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+  }
+
+  .hero-notice {
+    margin-top: 18px;
+    font-size: 0.8rem;
+    opacity: 0.65;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 64px;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-top: 64px;
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 900;
+    color: var(--red);
+    line-height: 1.1;
+  }
+
+  .section-header p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-top: 8px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  /* ── PHOTO CARD ── */
+  .photo-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+    margin-bottom: 20px;
+  }
+
+  .photo-slot {
+    width: 100%;
+    aspect-ratio: 16/7;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .photo-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Placeholder shown when no img */
+  .photo-placeholder {
+    text-align: center;
+    color: #bbb;
+  }
+
+  .photo-placeholder .icon { font-size: 3rem; margin-bottom: 6px; }
+  .photo-placeholder p { font-size: 0.8rem; font-style: italic; }
+
+  .card-body { padding: 24px 28px 28px; }
+
+  .card-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  /* ── PRICE TABLE ── */
+  .price-table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+
+  .price-table th {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #999;
+    padding: 0 0 8px;
+    text-align: left;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  .price-table th:not(:first-child) { text-align: right; }
+
+  .price-table td {
+    padding: 10px 0;
+    font-size: 0.92rem;
+    border-bottom: 1px solid #f5f5f5;
+    vertical-align: top;
+  }
+
+  .price-table td:not(:first-child) {
+    text-align: right;
+    font-weight: 700;
+    color: var(--red);
+    white-space: nowrap;
+  }
+
+  .price-table tr:last-child td { border-bottom: none; }
+
+  .tier-name { font-weight: 700; }
+  .tier-desc { font-size: 0.77rem; color: #999; margin-top: 2px; }
+
+  .popular-chip {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+
+  /* single price cards (cheese, gift) */
+  .simple-price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 8px;
+  }
+
+  .simple-price-label { font-weight: 600; font-size: 0.95rem; }
+  .simple-price-sub { font-size: 0.78rem; color: #999; margin-top: 2px; }
+  .simple-price-val { font-weight: 800; color: var(--red); font-size: 1.1rem; white-space: nowrap; }
+
+  /* ── DIVIDER ── */
+  .wave-divider {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  /* ── STICKY ORDER CTA ── */
+  .sticky-cta {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 14px 36px;
+    border-radius: 50px;
+    text-decoration: none;
+    box-shadow: 0 6px 28px rgba(200,35,44,0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+  }
+
+  .sticky-cta:hover { transform: translateX(-50%) translateY(-2px); box-shadow: 0 10px 36px rgba(200,35,44,0.5); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--red);
+    color: var(--white);
+    text-align: center;
+    padding: 48px 24px 36px;
+    margin-top: 20px;
+  }
+
+  footer .foot-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+  }
+
+  footer p { font-size: 0.88rem; opacity: 0.8; margin-bottom: 6px; line-height: 1.7; }
+
+  footer a { color: var(--yellow); text-decoration: none; font-weight: 600; }
+
+  .foot-cta {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--red);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 14px 36px;
+    border-radius: 50px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: opacity 0.2s;
+  }
+  .foot-cta:hover { opacity: 0.88; }
+
+  /* ── TWO-COL GRID for smaller cards ── */
+  .two-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media(max-width: 580px) {
+    .two-card-grid { grid-template-columns: 1fr; }
+    .sticky-cta { width: calc(100% - 32px); text-align: center; }
+  }
+
+  .notice-tag {
+    display: inline-block;
+    background: var(--yellow-light);
+    border: 1.5px solid #e0c000;
+    color: #7a6200;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+
+  .holiday-banner {
+    background: #1a7f37;
+    color: #fff;
+    text-align: center;
+    padding: 12px 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    display: none;
+  }
+  .holiday-banner.visible { display: block; }
+  .holiday-banner span { font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 0.88rem; display: block; margin-top: 3px; opacity: 0.9; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <img src="logo.png" alt="Dave Young Fruit Market" style="height:80px; margin-bottom:18px; display:block; margin-left:auto; margin-right:auto;">
+  <h1 class="hero-title">Fresh <em>Platters</em><br>&amp; Baskets</h1>
+  <p class="hero-subtitle">Hand-crafted with the finest seasonal produce. Perfect for any gathering, event, or gift.</p>
+  <a href="daveyoung_order_form.html" class="hero-cta">Order Now →</a>
+  <div class="hero-notice">⏰ 48 hours notice required · We deliver!</div>
+</div>
+
+<!-- FRUIT PLATTERS -->
+<div class="section">
+  <div class="section-header">
+    <h2>🍓 Fruit Platters</h2>
+    <p>Thoughtfully arranged with the freshest seasonal fruits. Three tiers to suit every occasion and budget.</p>
+  </div>
+
+  <div class="photo-card">
+    <div class="photo-slot" style="position:relative; background:#fff;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;width:100%;height:100%;">
+        <div style="overflow:hidden;display:flex;align-items:center;justify-content:center;"><img src="standard-platter.png" alt="Standard" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div style="overflow:hidden;display:flex;align-items:center;justify-content:center;"><img src="deluxe-platter.png" alt="Deluxe" style="width:100%;height:100%;object-fit:contain;"></div>
+        <div style="overflow:hidden;display:flex;align-items:center;justify-content:center;"><img src="premium-platter.png" alt="Premium" style="width:100%;height:100%;object-fit:contain;"></div>
+      </div>
+      <div style="position:absolute;bottom:0;left:0;right:0;display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;">
+        <span style="background:rgba(0,0,0,0.55);color:#fff;font-size:0.72rem;font-weight:700;padding:4px 2px;">Standard</span>
+        <span style="background:rgba(200,35,44,0.8);color:#fff;font-size:0.72rem;font-weight:700;padding:4px 2px;">Deluxe ★</span>
+        <span style="background:rgba(0,0,0,0.55);color:#fff;font-size:0.72rem;font-weight:700;padding:4px 2px;">Premium</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="notice-tag">⏰ 48 hours notice · Fruit selection may vary seasonally</div>
+      <h3>Fruit Platters</h3>
+      <p class="card-desc">Vibrant, hand-arranged seasonal fruits — watermelon, cantaloupe, honeydew, strawberries, and more depending on your tier.</p>
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Small<br><span style="font-weight:400;text-transform:none;letter-spacing:0;">4–6 ppl</span></th>
+            <th>Medium<br><span style="font-weight:400;text-transform:none;letter-spacing:0;">6–12 ppl</span></th>
+            <th>Large<br><span style="font-weight:400;text-transform:none;letter-spacing:0;">12–20 ppl</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="tier-name">Standard</div>
+              <div class="tier-desc">Watermelon, cantaloupe,<br>honeydew, strawberries</div>
+            </td>
+            <td>$34.99</td>
+            <td>$55.99</td>
+            <td>$99.99</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="tier-name">Deluxe <span class="popular-chip">Most Popular</span></div>
+              <div class="tier-desc">Standard + pineapple,<br>mixed berries</div>
+            </td>
+            <td>$41.99</td>
+            <td>$77.99</td>
+            <td>$137.99</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="tier-name">Premium</div>
+              <div class="tier-desc">Deluxe + mango, pomegranate,<br>dragonfruit, fig</div>
+            </td>
+            <td>$69.99</td>
+            <td>$129.99</td>
+            <td>$199.99</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VEG PLATTERS -->
+  <div class="section-header" style="padding-top:20px;">
+    <h2>🥦 Vegetable Platters</h2>
+    <p>Meticulously crafted with the finest seasonal vegetables. Crisp, colourful, and crowd-pleasing.</p>
+  </div>
+
+  <div class="photo-card">
+    <div class="photo-slot">
+<img src="veg-platter.png" alt="Vegetable Platter" style="width:100%;height:100%;object-fit:contain;background:transparent;">
+    </div>
+    <div class="card-body">
+      <div class="notice-tag">⏰ 48 hours notice required</div>
+      <h3>Vegetable Platters</h3>
+      <p class="card-desc">A delightful array of seasonal vegetables, beautifully arranged to elevate any event.</p>
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>Serves</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="tier-name">Medium</div></td>
+            <td style="text-align:left; color:#888; font-size:0.88rem;">6–12 people</td>
+            <td>$65.99</td>
+          </tr>
+          <tr>
+            <td><div class="tier-name">Large</div></td>
+            <td style="text-align:left; color:#888; font-size:0.88rem;">12–20 people</td>
+            <td>$99.99</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FRUIT BASKETS + CHEESE -->
+  <div class="section-header" style="padding-top:20px;">
+    <h2>🧺 Fruit Baskets &amp; 🧀 Cheese Boards</h2>
+    <p>Beautiful gifts or elegant additions to any gathering.</p>
+  </div>
+
+  <div class="two-card-grid">
+    <div class="photo-card">
+      <div class="photo-slot" style="aspect-ratio:4/3;"><img src="fruit-basket.png" alt="Fruit Basket" style="width:100%;height:100%;object-fit:contain;"></div>
+      <div class="card-body">
+        <div class="notice-tag">⏰ 48 hours notice</div>
+        <h3 style="font-size:1.35rem;">Fruit Baskets</h3>
+        <p class="card-desc" style="font-size:0.85rem;">Hand-picked seasonal fruits, beautifully arranged.</p>
+        <div class="simple-price">
+          <div><div class="simple-price-label">Standard</div></div>
+          <div class="simple-price-val">$64.99</div>
+        </div>
+        <div class="simple-price">
+          <div><div class="simple-price-label">Deluxe</div></div>
+          <div class="simple-price-val">$99.99</div>
+        </div>
+        <div class="simple-price">
+          <div><div class="simple-price-label">Premium</div></div>
+          <div class="simple-price-val">$139.99</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-card">
+      <div class="photo-slot" style="aspect-ratio:4/3;"><img src="cheese-board.png" alt="Cheese Board" style="width:100%;height:100%;object-fit:contain;"></div>
+      <div class="card-body">
+        <div class="notice-tag">⏰ 48 hours notice</div>
+        <h3 style="font-size:1.35rem;">Cheese Boards</h3>
+        <p class="card-desc" style="font-size:0.85rem;">Finest cheeses with crackers, fruits &amp; spreads.</p>
+        <div class="simple-price">
+          <div><div class="simple-price-label">Cheese Board</div></div>
+          <div class="simple-price-val">$99.99</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GIFT BASKETS -->
+  <div class="section-header" style="padding-top:20px;">
+    <h2>🎁 Gift Baskets</h2>
+    <p>Curated with care — the perfect thoughtful gift for any occasion.</p>
+  </div>
+
+  <div class="photo-card">
+
+    <div class="card-body">
+      <div class="notice-tag">⏰ 48 hours notice · All $99.99</div>
+      <h3>Gift Baskets</h3>
+      <p class="card-desc">Choose from six curated styles — all beautifully packaged and ready to give.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div class="simple-price"><div class="simple-price-label">Custom Deluxe</div></div>
+        <div class="simple-price"><div class="simple-price-label">Pasta Basket</div></div>
+        <div class="simple-price"><div class="simple-price-label">Jam / Honey</div></div>
+        <div class="simple-price"><div class="simple-price-label">Cheese &amp; Crackers</div></div>
+        <div class="simple-price"><div class="simple-price-label">Tea or Coffee</div></div>
+        <div class="simple-price"><div class="simple-price-label">Dried Fruit &amp; Nut</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div style="text-align:center; padding-top:20px; padding-bottom:40px;">
+    <a href="daveyoung_order_form.html" class="hero-cta" style="font-size:1.15rem; padding:18px 52px;">Place Your Order →</a>
+    <div style="margin-top:14px; font-size:0.82rem; color:#888;">⏰ 48 hours notice required on all orders<br>We'll call or text to confirm · (416) 489-1118</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">Dave Young Fruit Market</div>
+  <p>494 Eglinton Avenue West, Toronto, ON M5N 1A5</p>
+  <p><a href="tel:4164891118">(416) 489-1118</a> · <a href="https://instagram.com/daveyoungfruitmarket">@daveyoungfruitmarket</a></p>
+  <p style="margin-top:4px;">Call, text, or DM us — we also deliver!</p>
+  <a href="daveyoung_order_form.html" class="foot-cta">Order Now →</a>
+</footer>
+
+<!-- STICKY CTA -->
+<a href="daveyoung_order_form.html" class="sticky-cta">🛒 Order Now</a>
+
+</body>
+</html>
