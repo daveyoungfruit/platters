@@ -534,12 +534,14 @@ function submitOrder() {
   var params = new URLSearchParams();
   Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
 
-  // Use GET request via script tag - most reliable way to hit Google Apps Script
+  // Use hidden iframe - most reliable way to fire GET to Google Apps Script
   var params = new URLSearchParams();
   Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
 
-  var img = new Image();
-  img.src = SHEETS_URL + '?' + params.toString();
+  var iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = SHEETS_URL + '?' + params.toString();
+  document.body.appendChild(iframe);
 
   setTimeout(function() {
     window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
