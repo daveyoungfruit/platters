@@ -534,18 +534,17 @@ function submitOrder() {
   var params = new URLSearchParams();
   Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
 
-  // Use hidden iframe - most reliable way to fire GET to Google Apps Script
+  // Send order to Google Sheets
   var params = new URLSearchParams();
   Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
 
-  var iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
-  iframe.src = SHEETS_URL + '?' + params.toString();
-  document.body.appendChild(iframe);
-
-  setTimeout(function() {
-    window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
-  }, 3000);
+  fetch(SHEETS_URL, { method: 'POST', body: params, mode: 'no-cors' })
+    .catch(function() {})
+    .finally(function() {
+      setTimeout(function() {
+        window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
+      }, 3000);
+    });
 }
 
 // Allow any date from today onwards - short notice shows a warning but doesn't block
