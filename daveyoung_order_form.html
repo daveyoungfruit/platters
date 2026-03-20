@@ -534,17 +534,15 @@ function submitOrder() {
   var params = new URLSearchParams();
   Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
 
-  // Send order via GET request to avoid CORS issues
+  // Submit to Google Sheets
   var params = new URLSearchParams();
   Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
 
-  var script = document.createElement('script');
-  script.src = SHEETS_URL + '?callback=orderCallback&' + params.toString();
-  document.body.appendChild(script);
-
-  setTimeout(function() {
-    window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
-  }, 4000);
+  fetch(SHEETS_URL, { method: 'POST', body: params, mode: 'no-cors' })
+    .catch(function() {})
+    .finally(function() {
+      window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
+    });
 }
 
 // Allow any date from today onwards - short notice shows a warning but doesn't block
@@ -585,8 +583,6 @@ for (var f = 0; f < fields.length; f++) {
 }
 
 updateFruitPreview();
-
-function orderCallback(data) { /* order received */ }
 </script>
 </body>
 </html>
