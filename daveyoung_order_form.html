@@ -534,13 +534,16 @@ function submitOrder() {
   var params = new URLSearchParams();
   Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
 
-  fetch(SHEETS_URL, { method:'POST', body: params, mode:'no-cors' })
-    .catch(function() {})
-    .finally(function() {
-      setTimeout(function() {
-        window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
-      }, 2000); // wait 2 seconds for Google to receive the request
-    });
+  // Use GET request via script tag - most reliable way to hit Google Apps Script
+  var params = new URLSearchParams();
+  Object.keys(orderData).forEach(function(key) { params.append(key, orderData[key]); });
+
+  var img = new Image();
+  img.src = SHEETS_URL + '?' + params.toString();
+
+  setTimeout(function() {
+    window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
+  }, 3000);
 }
 
 // Allow any date from today onwards - short notice shows a warning but doesn't block
