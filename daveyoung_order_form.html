@@ -527,7 +527,7 @@ function submitOrder() {
   };
 
   var btn = document.getElementById('submitBtn');
-  btn.textContent = 'Sending...';
+  btn.textContent = 'Sending... Please wait';
   btn.disabled = true;
 
   // Send as URL params to avoid CORS issues with Google Apps Script
@@ -537,7 +537,9 @@ function submitOrder() {
   fetch(SHEETS_URL, { method:'POST', body: params, mode:'no-cors' })
     .catch(function() {})
     .finally(function() {
-      window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
+      setTimeout(function() {
+        window.location.href = 'order_confirmation.html?phone=' + encodeURIComponent(phone) + '&email=' + encodeURIComponent(email);
+      }, 2000); // wait 2 seconds for Google to receive the request
     });
 }
 
